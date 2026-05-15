@@ -1,0 +1,111 @@
+# =============================================================================
+# SheetSense AI — production compose
+# =============================================================================
+# NO exposed ports here. Traefik (Coolify) handles all external routing.
+# Local development uses `docker-compose.local.yml` as an overlay that adds
+# host port mappings. Always pass both files locally:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+#
+# Services are populated incrementally per the build phases in CLAUDE.md.
+# =============================================================================
+
+services:
+  # ---------------------------------------------------------------------------
+  # Postgres — Mastra memory + workflow state + sessions
+  # ---------------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sheetsense
+      POSTGRES_USER: sheetsense
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sheetsense}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sheetsense -d sheetsense"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ---------------------------------------------------------------------------
+  # Redis — sandbox sheet cache, per-IP rate limit, daily cost ceiling
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ---------------------------------------------------------------------------
+  # Sandbox — FastAPI Python sidecar (Phase 2)
+  # Internal-only; only the Mastra service should hit it.
+  # ---------------------------------------------------------------------------
+  # sandbox:
+  #   build:
+  #     context: ./services/sandbox
+  #   restart: unless-stopped
+  #   environment:
+  #     COMPOSIO_API_KEY: ${COMPOSIO_API_KEY}
+  #     REDIS_URL: redis://redis:6379
+  #     SANDBOX_TIMEOUT_SEC: ${SANDBOX_TIMEOUT_SEC:-6}
+  #   depends_on:
+  #     redis:
+  #       condition: service_healthy
+
+  # ---------------------------------------------------------------------------
+  # Mastra service (Phase 3)
+  # ---------------------------------------------------------------------------
+  # mastra:
+  #   build:
+  #     context: ./services/mastra
+  #   restart: unless-stopped
+  #   environment:
+  #     DATABASE_URL: postgresql://sheetsense:${POSTGRES_PASSWORD:-sheetsense}@postgres:5432/sheetsense
+  #     REDIS_URL: redis://redis:6379
+  #     SANDBOX_URL: http://sandbox:8001
+  #     OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+  #     COMPOSIO_API_KEY: ${COMPOSIO_API_KEY}
+  #     COMPOSIO_DEMO_USER_ID: ${COMPOSIO_DEMO_USER_ID:-sheetsense_demo}
+  #     TURNSTILE_SECRET: ${TURNSTILE_SECRET}
+  #     PER_IP_DAILY_COST_USD: ${PER_IP_DAILY_COST_USD:-0.50}
+  #     PER_IP_RATE_PER_MIN: ${PER_IP_RATE_PER_MIN:-5}
+  #     ADMIN_TOKEN: ${ADMIN_TOKEN}
+  #     LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
+  #     LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
+  #     LANGFUSE_BASE_URL: ${LANGFUSE_BASE_URL}
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     redis:
+  #       condition: service_healthy
+  #     sandbox:
+  #       condition: service_started
+
+  # ---------------------------------------------------------------------------
+  # Web — Next.js 16 frontend (Phase 5)
+  # ---------------------------------------------------------------------------
+  # web:
+  #   build:
+  #     context: ./web
+  #     args:
+  #       NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL}
+  #       NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+  #       NEXT_PUBLIC_TURNSTILE_SITEKEY: ${NEXT_PUBLIC_TURNSTILE_SITEKEY}
+  #   restart: unless-stopped
+  #   environment:
+  #     NODE_ENV: production
+  #   depends_on:
+  #     mastra:
+  #       condition: service_started
+
+volumes:
+  postgres_data:
+  redis_data:

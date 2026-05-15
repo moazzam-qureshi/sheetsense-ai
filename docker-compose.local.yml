@@ -1,0 +1,35 @@
+# =============================================================================
+# SheetSense AI — local-dev overlay
+# =============================================================================
+# Adds host port mappings for services. Combined with docker-compose.yml:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+#
+# Port choices (avoiding sibling-project collisions):
+#   3000  — web (Next.js)
+#   4111  — Mastra service + Studio
+#   5434  — Postgres   (DocuAI uses 5433, default installs use 5432)
+#   6381  — Redis      (DocuAI uses 6379)
+#   8001  — Sandbox    (Python FastAPI sidecar)
+# =============================================================================
+
+services:
+  postgres:
+    ports:
+      - "5434:5432"
+
+  redis:
+    ports:
+      - "6381:6379"
+
+  # sandbox:
+  #   ports:
+  #     - "8001:8001"
+
+  # mastra:
+  #   ports:
+  #     - "4111:4111"
+
+  # web:
+  #   ports:
+  #     - "3000:3000"
