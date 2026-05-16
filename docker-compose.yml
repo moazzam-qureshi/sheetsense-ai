@@ -66,33 +66,34 @@ services:
         condition: service_healthy
 
   # ---------------------------------------------------------------------------
-  # Mastra service (Phase 3)
+  # Mastra service — the 4-agent pipeline + Composio integrations
   # ---------------------------------------------------------------------------
-  # mastra:
-  #   build:
-  #     context: ./services/mastra
-  #   restart: unless-stopped
-  #   environment:
-  #     DATABASE_URL: postgresql://sheetsense:${POSTGRES_PASSWORD:-sheetsense}@postgres:5432/sheetsense
-  #     REDIS_URL: redis://redis:6379
-  #     SANDBOX_URL: http://sandbox:8001
-  #     OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
-  #     COMPOSIO_API_KEY: ${COMPOSIO_API_KEY}
-  #     COMPOSIO_DEMO_USER_ID: ${COMPOSIO_DEMO_USER_ID:-sheetsense_demo}
-  #     TURNSTILE_SECRET: ${TURNSTILE_SECRET}
-  #     PER_IP_DAILY_COST_USD: ${PER_IP_DAILY_COST_USD:-0.50}
-  #     PER_IP_RATE_PER_MIN: ${PER_IP_RATE_PER_MIN:-5}
-  #     ADMIN_TOKEN: ${ADMIN_TOKEN}
-  #     LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
-  #     LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
-  #     LANGFUSE_BASE_URL: ${LANGFUSE_BASE_URL}
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #     redis:
-  #       condition: service_healthy
-  #     sandbox:
-  #       condition: service_started
+  mastra:
+    build:
+      context: ./services/mastra
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://sheetsense:${POSTGRES_PASSWORD:-sheetsense}@postgres:5432/sheetsense
+      REDIS_URL: redis://redis:6379
+      SANDBOX_URL: http://sandbox:8001
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      COMPOSIO_API_KEY: ${COMPOSIO_API_KEY}
+      COMPOSIO_DEMO_USER_ID: ${COMPOSIO_DEMO_USER_ID:-sheetsense_demo}
+      TURNSTILE_SECRET: ${TURNSTILE_SECRET}
+      PER_IP_DAILY_COST_USD: ${PER_IP_DAILY_COST_USD:-0.50}
+      PER_IP_RATE_PER_MIN: ${PER_IP_RATE_PER_MIN:-5}
+      ADMIN_TOKEN: ${ADMIN_TOKEN}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY}
+      LANGFUSE_BASE_URL: ${LANGFUSE_BASE_URL}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      sandbox:
+        condition: service_started
 
   # ---------------------------------------------------------------------------
   # Web — Next.js 16 frontend (Phase 5)

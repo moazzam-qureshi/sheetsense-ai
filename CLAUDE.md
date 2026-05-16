@@ -18,9 +18,10 @@ both before touching code.
 
 ## Stack at a glance
 
-- **Agents:** Mastra (TypeScript) — `@mastra/core`, `@mastra/memory`,
-  `@mastra/pg`, `@composio/mastra`, `@composio/core`. Versions matched
-  to the Clarilo reference (see §References below).
+- **Agents:** Mastra (TypeScript) — `@mastra/core` 1.35.0 (resolved
+  from `^1.5.0`), `@mastra/memory`, `@mastra/pg`, `@composio/mastra`,
+  `@composio/core` 0.6.x. Versions pinned to the Clarilo reference
+  (see §References below).
 - **LLMs:** OpenRouter — `openai/gpt-4o` for the Analyst (writes
   pandas code), `openai/gpt-4o-mini` for the other 3 agents.
 - **Compute:** FastAPI Python sidecar runs the Analyst's pandas code
@@ -37,9 +38,9 @@ both before touching code.
 | Phase | What | Status |
 |---|---|---|
 | 1 | Repo scaffold + docs + GitHub repo | ✅ done (commit `ece25a5`) |
-| 2 | Python sandbox sidecar | ✅ done (this commit) |
-| 3 | Mastra service skeleton + Composio factory (copy from Clarilo) | next |
-| 4 | 4 agents + `sheetsense-pipeline` workflow | pending |
+| 2 | Python sandbox sidecar | ✅ done (commit `7734d96`) |
+| 3 | Mastra service skeleton + Composio factory (copy from Clarilo) | ✅ done (this commit) |
+| 4 | 4 agents + `sheetsense-pipeline` workflow | next |
 | 5 | Next.js frontend (sheet picker, formula bar, agent timeline, OAuth) | pending |
 | 6 | Coolify deploy + Turnstile checklist + Canva thumbnail + Upwork tile | pending |
 | 7 | Per-project KB doc + Upwork case study | pending |
