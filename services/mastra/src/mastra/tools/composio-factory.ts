@@ -39,9 +39,14 @@ import { classifyTools } from "./tool-classification.js";
 // via the `userId` argument passed to `composio.tools.get(...)`; the
 // API key on the client itself is the account-level key.
 // ---------------------------------------------------------------------------
-let _composio: Composio | null = null;
+// Typed as `any` to sidestep the Composio<TProvider> generic — the
+// MastraProvider doesn't satisfy the default OpenAIProvider constraint
+// in the Composio types as published, but the runtime works correctly.
+// This is the same pattern Clarilo's `export const composio = new Composio(...)`
+// implicitly relies on (TS-side widening of the module export).
+let _composio: any = null;
 
-export function getComposio(): Composio {
+export function getComposio(): any {
   if (_composio) return _composio;
   const apiKey = process.env.COMPOSIO_API_KEY;
   if (!apiKey) {

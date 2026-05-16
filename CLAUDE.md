@@ -39,9 +39,9 @@ both before touching code.
 |---|---|---|
 | 1 | Repo scaffold + docs + GitHub repo | ✅ done (commit `ece25a5`) |
 | 2 | Python sandbox sidecar | ✅ done (commit `7734d96`) |
-| 3 | Mastra service skeleton + Composio factory (copy from Clarilo) | ✅ done (this commit) |
-| 4 | 4 agents + `sheetsense-pipeline` workflow | next |
-| 5 | Next.js frontend (sheet picker, formula bar, agent timeline, OAuth) | pending |
+| 3 | Mastra service skeleton + Composio factory (copy from Clarilo) | ✅ done (commit `8bb4eff`) |
+| 4 | 4 agents + `sheetsense-pipeline` workflow | ✅ done (this commit) |
+| 5 | Next.js frontend (sheet picker, formula bar, agent timeline, OAuth) | next |
 | 6 | Coolify deploy + Turnstile checklist + Canva thumbnail + Upwork tile | pending |
 | 7 | Per-project KB doc + Upwork case study | pending |
 
