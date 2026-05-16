@@ -71,7 +71,7 @@ Voice Agent + Settings JSON) so the portfolio shows breadth.
    Python sandbox sidecar (FastAPI, port 8001, internal-only)
         │
         ├─ fetches sheet bytes via Composio (cached per session in Redis)
-        ├─ spawns subprocess with RLIMIT_CPU=5, RLIMIT_AS=256MB
+        ├─ spawns subprocess with RLIMIT_CPU=10, RLIMIT_AS=1024MB
         ├─ restricted import hook (pandas/numpy/matplotlib/scipy only)
         └─ returns { result: jsonable, chart_png_b64: optional }
 
@@ -243,7 +243,7 @@ Behavior:
    b. Miss → fetch via Composio Sheets read → parse → cache → use.
 2. Spawn subprocess:
    - setrlimit(RLIMIT_CPU,  (5, 5))         # 5 sec wall + cpu cap
-   - setrlimit(RLIMIT_AS,   (256MB, 256MB)) # 256MB virtual memory
+   - setrlimit(RLIMIT_AS,   (1024MB, 1024MB)) # 1024MB virtual address space; RSS stays under ~200MB
    - audit hook blocks: os.system, subprocess.*, socket.*, open(w/a),
      ctypes, importlib.__import__ for non-allow-listed modules
    - allow-listed imports: pandas, numpy, matplotlib (Agg), scipy,

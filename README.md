@@ -25,7 +25,7 @@ What makes it different from a "chat with your sheet" demo:
 
 - **Real pandas in a sandboxed subprocess, not LLM-token math.** A
   FastAPI Python sidecar runs the Analyst's LLM-written pandas code
-  against the full DataFrame under `RLIMIT_CPU=5`, `RLIMIT_AS=256MB`,
+  against the full DataFrame under `RLIMIT_CPU=10`, `RLIMIT_AS=1024MB`,
   and a restricted import hook. Only the analysis *result* flows back
   to the LLM — the full DataFrame never re-enters the model context.
   This sidesteps the token-budget collapse that hits ChatGPT-with-CSV

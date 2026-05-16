@@ -22,9 +22,9 @@ services:
     ports:
       - "6381:6379"
 
-  # sandbox:
-  #   ports:
-  #     - "8001:8001"
+  sandbox:
+    ports:
+      - "8001:8001"
 
   # mastra:
   #   ports:

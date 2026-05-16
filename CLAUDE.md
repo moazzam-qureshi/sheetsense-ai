@@ -24,7 +24,7 @@ both before touching code.
 - **LLMs:** OpenRouter — `openai/gpt-4o` for the Analyst (writes
   pandas code), `openai/gpt-4o-mini` for the other 3 agents.
 - **Compute:** FastAPI Python sidecar runs the Analyst's pandas code
-  in a subprocess with `RLIMIT_CPU=5`, `RLIMIT_AS=256MB`, and a
+  in a subprocess with `RLIMIT_CPU=10`, `RLIMIT_AS=1024MB`, and a
   restricted import hook.
 - **Frontend:** Next.js 16 (App Router), Tailwind, JetBrains Mono for
   data, Inter for UI. Sheets-native visual archetype.
@@ -36,9 +36,9 @@ both before touching code.
 
 | Phase | What | Status |
 |---|---|---|
-| 1 | Repo scaffold + docs + GitHub repo | in progress |
-| 2 | Python sandbox sidecar | pending |
-| 3 | Mastra service skeleton + Composio factory (copy from Clarilo) | pending |
+| 1 | Repo scaffold + docs + GitHub repo | ✅ done (commit `ece25a5`) |
+| 2 | Python sandbox sidecar | ✅ done (this commit) |
+| 3 | Mastra service skeleton + Composio factory (copy from Clarilo) | next |
 | 4 | 4 agents + `sheetsense-pipeline` workflow | pending |
 | 5 | Next.js frontend (sheet picker, formula bar, agent timeline, OAuth) | pending |
 | 6 | Coolify deploy + Turnstile checklist + Canva thumbnail + Upwork tile | pending |

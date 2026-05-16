@@ -45,20 +45,25 @@ services:
       retries: 10
 
   # ---------------------------------------------------------------------------
-  # Sandbox — FastAPI Python sidecar (Phase 2)
+  # Sandbox — FastAPI Python sidecar
   # Internal-only; only the Mastra service should hit it.
   # ---------------------------------------------------------------------------
-  # sandbox:
-  #   build:
-  #     context: ./services/sandbox
-  #   restart: unless-stopped
-  #   environment:
-  #     COMPOSIO_API_KEY: ${COMPOSIO_API_KEY}
-  #     REDIS_URL: redis://redis:6379
-  #     SANDBOX_TIMEOUT_SEC: ${SANDBOX_TIMEOUT_SEC:-6}
-  #   depends_on:
-  #     redis:
-  #       condition: service_healthy
+  sandbox:
+    build:
+      context: ./services/sandbox
+    restart: unless-stopped
+    environment:
+      COMPOSIO_API_KEY: ${COMPOSIO_API_KEY}
+      REDIS_URL: redis://redis:6379
+      SANDBOX_TIMEOUT_SEC: ${SANDBOX_TIMEOUT_SEC:-12}
+      SANDBOX_RLIMIT_CPU: ${SANDBOX_RLIMIT_CPU:-10}
+      SANDBOX_RLIMIT_AS_MB: ${SANDBOX_RLIMIT_AS_MB:-1024}
+      SHEET_CACHE_TTL_SEC: ${SHEET_CACHE_TTL_SEC:-900}
+      MAX_RESULT_ROWS: ${MAX_RESULT_ROWS:-100}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      redis:
+        condition: service_healthy
 
   # ---------------------------------------------------------------------------
   # Mastra service (Phase 3)
